@@ -123,5 +123,5 @@ class MyCorpusReader:
                     word_count[doc] = word_count.get(doc, 0) + 1
         return word_count
 
-    def fileIds(self):
+    def fileids(self):
         return os.listdir(self.root)

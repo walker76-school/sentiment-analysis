@@ -4,7 +4,7 @@ from nltk.collocations import *
 from CorpusReader_TFIDF import CorpusReader_TFIDF
 
 class AspectDetector:
-    TF_IDF_ASPECT_PERCENT = .05
+    TF_IDF_ASPECT_PERCENT = .01
     NUMBER_OF_TWO_GRAMS_TO_CONSIDER = 10
 
     def __init__(self, trainingCorpus, reviewCorpus):
@@ -15,8 +15,11 @@ class AspectDetector:
 
     def run(self):
         # get all of the tf_idf values for the documents in the review corpus
-        vectors = [self.tf_idf_Model.td_idf_new(self.reviewCorpus.words(file)) for file in self.trainingCorpus.fileids()]
-        sumVect = [int] * len(vectors[0])
+        vectors = list()
+        for file in self.reviewCorpus.fileids():
+            newVec = self.tf_idf_Model.td_idf_new(self.reviewCorpus.words(file))
+            vectors.append(newVec)
+        sumVect = [0.0] * len(vectors[0])
         # now find the best words for all of them
         for vector in vectors:
             count = 0
@@ -24,17 +27,17 @@ class AspectDetector:
                 sumVect[count] += value
                 count += 1
         # associate each word in the corpus with its average tf_idf value
-        averageVect = dict(zip(self.tf_idf_Model.words(), sumVect))
+        averageVect = dict(zip(self.tf_idf_Model.tf_idf_dim(), sumVect))
         # we now have an orderering of all the words in the corpus
         biggestWords = list(sorted(averageVect.keys(), key=averageVect.get, reverse=True))
         # now get the most common words
         # these will be the preliminaty aspects thwich will be farther narrowed down
-        # right now will just take the top 5% although this can be narrowed down
-        potentialAspects = biggestWords[int(AspectDetector.TF_IDF_ASPECT_PERCENT * len(self.tf_idf_Model.words()))]
+        # right now will just take the top 1% although this can be narrowed down
+        potentialAspects = biggestWords[:int(AspectDetector.TF_IDF_ASPECT_PERCENT * len(self.tf_idf_Model.tf_idf_dim()))]
 
         # going to now consider collocations of the corpus
         bigram_measures = nltk.collocations.BigramAssocMeasures()
-        finder = BigramCollocationFinder.from_words(self.corpus.words())
+        finder = BigramCollocationFinder.from_words(self.reviewCorpus.words())
         # find the most common bigrams of the corpus
         bigrams = finder.nbest(bigram_measures.pmi, AspectDetector.NUMBER_OF_TWO_GRAMS_TO_CONSIDER)
 
