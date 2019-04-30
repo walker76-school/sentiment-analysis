@@ -122,3 +122,6 @@ class MyCorpusReader:
                 if word not in self.stop_words:
                     word_count[doc] = word_count.get(doc, 0) + 1
         return word_count
+
+    def fileIds(self):
+        return os.listdir(self.root)

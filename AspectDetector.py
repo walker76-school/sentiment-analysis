@@ -7,13 +7,15 @@ class AspectDetector:
     TF_IDF_ASPECT_PERCENT = .05
     NUMBER_OF_TWO_GRAMS_TO_CONSIDER = 10
 
-    def __init__(self, corpus):
-        self.corpus = corpus
-        self.tf_idf_Model = CorpusReader_TFIDF(corpus)
+    def __init__(self, trainingCorpus, reviewCorpus):
+        self.trainingCorpus = trainingCorpus
+        self.reviewCorpus = reviewCorpus
+        # train the tfidf model on the training corpus
+        self.tf_idf_Model = CorpusReader_TFIDF(trainingCorpus)
 
     def run(self):
-        # get all of the tf_idf values
-        vectors = self.tf_idf_Model.tf_idf()
+        # get all of the tf_idf values for the documents in the review corpus
+        vectors = [self.tf_idf_Model.td_idf_new(self.reviewCorpus.words(file)) for file in self.trainingCorpus.fileids()]
         sumVect = [int] * len(vectors[0])
         # now find the best words for all of them
         for vector in vectors:
@@ -34,11 +36,16 @@ class AspectDetector:
         bigram_measures = nltk.collocations.BigramAssocMeasures()
         finder = BigramCollocationFinder.from_words(self.corpus.words())
         # find the most common bigrams of the corpus
-        good_Grams = finder.nbest(bigram_measures.pmi, AspectDetector.NUMBER_OF_TWO_GRAMS_TO_CONSIDER)
+        bigrams = finder.nbest(bigram_measures.pmi, AspectDetector.NUMBER_OF_TWO_GRAMS_TO_CONSIDER)
 
         # now we have both the "best" 2 grams, and the best "unigrams" (from the tfidf model)
         # what I am thinking is that now we see if any of the unigrams are mutually contained in a two-grams
         # ie if "battery" and "life" are both popular unigrams, and "battery life" is a common
         # bigram we cut out the term that appears later in the twogram
         # maybe should we also consider grams higher than 2 (probably big performance hit?!?)
+
+        for bigram_1, bigram_2 in bigrams:
+            if(bigram_1 in potentialAspects and bigram_2 in potentialAspects):
+                potentialAspects.remove(bigram_2)
+        return potentialAspects
 
