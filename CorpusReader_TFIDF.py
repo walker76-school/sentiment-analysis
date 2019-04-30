@@ -13,6 +13,8 @@ from nltk.stem import PorterStemmer, SnowballStemmer
 from scipy import spatial
 import math
 import copy
+import pickle
+
 
 # CorpusReader_TFIDF
 # This class adds tf-idf functionality to a given corpus reader
@@ -100,35 +102,70 @@ class CorpusReader_TFIDF:
 
         self.allWords = set(self.allWords)
 
-        # initially each term is present in no documents
-        for word in self.allWords:
-            self.wordDocumentFrequency[word] = 0
-            termFrequency[word] = 0
-            self.dimensions.append(word)
+        try:
+            file_handler_fs = open("data/tf_idf/freq_storage.dat", 'rb')
+            fileFrequencyStorage = pickle.load(file_handler_fs)
+            file_handler_fs.close()
 
-        dictClone = copy.deepcopy(termFrequency)
+            file_handler_df = open("data/tf_idf/doc_freq.dat", 'rb')
+            self.wordDocumentFrequency = pickle.load(file_handler_df)
+            file_handler_df.close()
 
-        # iterate through every file and its contents
-        for file, wordList in wordStorage.items():
-            # count up how many times each term occurs in each file
-            for word in wordList:
-                termFrequency[word] = termFrequency[word] + 1
-            for word, wordFrequency in termFrequency.items():
-                if wordFrequency > 0:
-                    self.wordDocumentFrequency[word] = self.wordDocumentFrequency[word] + 1
-            fileFrequencyStorage[file] = termFrequency
-            termFrequency = copy.deepcopy(dictClone)
+            file_handler_tf = open("data/tf_idf/term_freq.dat", 'rb')
+            termFrequency = pickle.load(file_handler_tf)
+            file_handler_tf.close()
 
-        # now actually calculate the tf-idf values
-        for fileId in corpus.fileids():
-            vector = list()
-            frequencyMap = fileFrequencyStorage[fileId]
+        except FileNotFoundError:
+            # initially each term is present in no documents
             for word in self.allWords:
-                # calculate the TFIDF value  using both the term frequency of the term
-                # and the number of docs it appears
-                vector.append(self.calculateTfIdfValue(frequencyMap[word], self.wordDocumentFrequency[word]))
-            del fileFrequencyStorage[fileId]
-            self.vectors[fileId] = vector
+                self.wordDocumentFrequency[word] = 0
+                termFrequency[word] = 0
+                self.dimensions.append(word)
+
+            dictClone = copy.deepcopy(termFrequency)
+
+            # iterate through every file and its contents
+            for file, wordList in wordStorage.items():
+                # count up how many times each term occurs in each file
+                for word in wordList:
+                    termFrequency[word] = termFrequency[word] + 1
+                for word, wordFrequency in termFrequency.items():
+                    if wordFrequency > 0:
+                        self.wordDocumentFrequency[word] = self.wordDocumentFrequency[word] + 1
+                fileFrequencyStorage[file] = termFrequency
+                termFrequency = copy.deepcopy(dictClone)
+
+        try:
+            file_handler = open("data/tf_idf/vectors.dat", 'rb')
+            self.vectors = pickle.load(file_handler)
+            file_handler.close()
+        except FileNotFoundError:
+            # now actually calculate the tf-idf values
+            for fileId in corpus.fileids():
+                vector = list()
+                frequencyMap = fileFrequencyStorage[fileId]
+                for word in self.allWords:
+                    # calculate the TFIDF value  using both the term frequency of the term
+                    # and the number of docs it appears
+                    vector.append(self.calculateTfIdfValue(frequencyMap[word], self.wordDocumentFrequency[word]))
+                del fileFrequencyStorage[fileId]
+                self.vectors[fileId] = vector
+
+        print("Saving TF-IDF File Frequency Storage")
+        file_handler = open("data/tf_idf/freq_storage.dat", 'wb')
+        pickle.dump(fileFrequencyStorage, file_handler)
+
+        print("Saving TF-IDF Document Frequency")
+        file_handler = open("data/tf_idf/doc_freq.dat", 'wb')
+        pickle.dump(self.wordDocumentFrequency, file_handler)
+
+        print("Saving TF-IDF Term Frequency")
+        file_handler = open("data/tf_idf/term_freq.dat", 'wb')
+        pickle.dump(termFrequency, file_handler)
+
+        print("Saving TF-IDF Vectors")
+        file_handler = open("data/tf_idf/vectors.dat", 'wb')
+        pickle.dump(self.vectors, file_handler)
 
     # calculateTfIdfValue
     #
