@@ -7,6 +7,6 @@ print(corpus.fileids())
 print(corpus.words())
 print(corpus.words(corpus.fileids()[0]))
 
-a = AspectDetector(state_union, corpus)
+a = AspectDetector(brown, corpus)
 
 print(a.run())
