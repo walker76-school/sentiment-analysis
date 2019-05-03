@@ -294,6 +294,8 @@ class CorpusReader_TFIDF:
     # stemwords
     # stems all words in the collection
     def stemWords(self, words):
+        if self.stemmer is None:
+            return words
         if isinstance(words, set):
             return {self.stemmer.stem(x) for x in words}
         return [self.stemmer.stem(x) for x in words]

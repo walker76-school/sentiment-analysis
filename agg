@@ -1,0 +1,9 @@
+keyboard	 0 0 2
+call quality 4 0 0
+battery		 1 0 2
+price		 2 0 0
+buttons		 3 0 0
+texting		 1 0 2
+ring		 1 0 0
+activation	 1 0 0
+screen		 1 0 0
