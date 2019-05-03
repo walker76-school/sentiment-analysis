@@ -6,6 +6,7 @@ from HMMTagger import HmmTagger
 from nltk.tokenize import sent_tokenize, word_tokenize
 from collections import defaultdict
 import pickle
+from collections import Counter
 
 
 class AspectDetector:
@@ -107,5 +108,11 @@ class AspectDetector:
             else:
                 self.potentialAspects.remove(gram)
 
-        return self.potentialAspects
+        return self.potentialAspects[:10]
+
+        '''
+        tokens = [e1.lower() for e1 in word_tokenize(self.reviewCorpus.raw())]
+        freq = Counter(tokens)
+        self.potentialAspects.sort(key=lambda e1 : freq[e1], reverse=True)
+        '''
 
