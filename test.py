@@ -33,14 +33,20 @@ for aspect in potentialAspects:
     sents = sent_tokenize(raw)
 
     for sent in sents:
-        tokens = [e1.lower() for e1 in word_tokenize(sent)]
-        for word in tokens:
-            if word.lower() == aspect:
-                res = sentimentAnalyzer.analyze(sent)
-                if res[0] == 1:
-                    sentiment_dict[POSITIVE_KEY] += 1
-                else:
-                    sentiment_dict[NEGATIVE_KEY] += 1
+        if ", " in sent:
+            sent_tokens = sent.split(", ")
+        else:
+            sent_tokens = [sent]
+
+        for sent_token in sent_tokens:
+            tokens = [e1.lower() for e1 in word_tokenize(sent_token)]
+            for word in tokens:
+                if word.lower() == aspect:
+                    res = sentimentAnalyzer.analyze(sent_token)
+                    if res[0] == 1:
+                        sentiment_dict[POSITIVE_KEY] += 1
+                    else:
+                        sentiment_dict[NEGATIVE_KEY] += 1
     aspect_dict[aspect] = sentiment_dict
 
 print(aspect_dict)

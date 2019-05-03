@@ -108,11 +108,19 @@ class AspectDetector:
             else:
                 self.potentialAspects.remove(gram)
 
+        tokens = [e1.lower() for e1 in word_tokenize(self.reviewCorpus.raw())]
+        freq_raw = Counter(tokens)
+        # freq_filtered = Counter()
+        for aspect in self.potentialAspects:
+            count = freq_raw[aspect]
+            if count > 3:
+                # freq_filtered[key] = count
+                self.potentialAspects.remove(aspect)
+
+        # self.potentialAspects.sort(key=lambda e1 : freq[e1], reverse=True)
+
         return self.potentialAspects[:10]
 
-        '''
-        tokens = [e1.lower() for e1 in word_tokenize(self.reviewCorpus.raw())]
-        freq = Counter(tokens)
-        self.potentialAspects.sort(key=lambda e1 : freq[e1], reverse=True)
-        '''
+
+
 
