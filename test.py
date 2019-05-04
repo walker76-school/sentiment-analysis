@@ -7,6 +7,7 @@ from SentimentAnalyzer import SentimentAnalyzer
 from MyViterbi import MyViterbi
 from collections import defaultdict
 from nltk.parse.corenlp import CoreNLPDependencyParser
+from nltk.corpus import wordnet as wn
 
 nltk.download('universal_tagset')
 corpus = MyCorpusReader("reviews")
@@ -30,6 +31,38 @@ aspect_dict = {}
 
 raw = corpus.raw()
 sents = sent_tokenize(raw)
+
+ndx = int(0.2 * len(potentialAspects))
+potentialAspects = potentialAspects[:ndx]
+
+'''
+sim_dict = {}
+
+for outer_aspect in potentialAspects:
+    for inner_aspect in potentialAspects:
+        if outer_aspect == inner_aspect:
+            continue
+
+        print("%s - %s" % (outer_aspect, inner_aspect))
+
+        outer_synsets = wn.synsets(outer_aspect)
+        inner_synsets = wn.synsets(inner_aspect)
+
+        count = 0
+        total = 0.0
+        for outer_synset in outer_synsets:
+            for inner_synset in inner_synsets:
+                sim = wn.wup_similarity(outer_synset, inner_synset)
+                if sim is not None:
+                    count += 1
+                    total += sim
+
+        try:
+            avg = total / count
+            sim_dict[(outer_aspect, inner_aspect)] = avg
+        except ZeroDivisionError:
+            pass
+'''
 
 for aspect in potentialAspects:
 
