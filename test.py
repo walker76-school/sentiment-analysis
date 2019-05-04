@@ -80,6 +80,9 @@ for aspect in potentialAspects:
 
         for sent_token in sent_tokens:
 
+            if aspect not in sent_token:
+                continue
+
             tokens = [e1.lower() for e1 in word_tokenize(sent_token)]
             parse_triples = []
             try:
