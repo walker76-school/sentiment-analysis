@@ -119,7 +119,7 @@ class AspectDetector:
 
         # self.potentialAspects.sort(key=lambda e1 : freq[e1], reverse=True)
 
-        return self.potentialAspects[:10]
+        return self.potentialAspects
 
 
 
