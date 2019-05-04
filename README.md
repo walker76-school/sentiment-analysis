@@ -37,6 +37,11 @@ Next you will have to install the CoreNLP models for using the CoreNLP Dependenc
 
 Navigate to [CoreNLP's download page](https://stanfordnlp.github.io/CoreNLP/download.html) or use the direct [link](https://nlp.stanford.edu/software/stanford-parser-full-2018-10-17.zip) to download the required models and unzip them to a convinent location.
 
+In terminal change directory to the CoreNLP folder. For my local computer the command is.
+```
+> cd ~/stanford-corenlp-full-2018-10-05
+```
+
 To host the models locally use the following command:
 
 ```
