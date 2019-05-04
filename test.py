@@ -101,6 +101,12 @@ for aspect in potentialAspects:
         print("Removing %s" % aspect)
         potentialAspects.remove(aspect)
 
+# map sentences to their word tokenization in lowercase
+sentToWords = dict(zip(sents, map(lambda s: [w.lower() for w in word_tokenize(s)], sents)))
+
+# free up the memory
+del sents
+
 for aspect in potentialAspects:
 
     if aspect in aspect_dict:
@@ -108,17 +114,24 @@ for aspect in potentialAspects:
     else:
         sentiment_dict = defaultdict(int)
 
-    for sent in sents:
-            tokens = [e1.lower() for e1 in word_tokenize(sent)]
+    for sent, tokens in sentToWords.items():
 
+            # for each word check if that word is the desired aspect
+            # if so that means that the sentence relates to this aspect
+            # we then check the sentiment of the sentence and add it to
+            # a positive or negative count
             for word in tokens:
-                if word.lower() == aspect:
+                if word == aspect:
                     res = sentimentAnalyzer.analyze(sent)
                     print("%s - %s" % (aspect, sent))
+                    # positive sentiment
                     if res[0] == 1:
                         sentiment_dict[POSITIVE_KEY] += 1
+                    # negative sentiment
                     else:
                         sentiment_dict[NEGATIVE_KEY] += 1
+                    # this sentence is done being considered for this aspect once a match is found
+                    break
 
     aspect_dict[aspect] = sentiment_dict
 

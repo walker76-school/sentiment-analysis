@@ -50,6 +50,8 @@ To host the models locally use the following command:
 
 The models will need to be hosted or the project will not be able to run
 
+Create a folder in this project called data for caching purposes.
+
 ## Built With
 
 * [NLTK](https://www.nltk.org/) - Python library for Natural Language Processing
