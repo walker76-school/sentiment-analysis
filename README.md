@@ -50,12 +50,18 @@ To host the models locally use the following command:
 
 The models will need to be hosted or the project will not be able to run
 
-Create a folder in this project called data for caching purposes.
-
+In the the folder where this readMe is located create a folder in this project called data for caching purposes. 
+The reason that this folder is not automatically present is because git does not store empty folders. The files
+that will be generated into the data folder are large.
+```
+> mkdir data
+```
 ## Built With
 
 * [NLTK](https://www.nltk.org/) - Python library for Natural Language Processing
 * [Standford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) - NLP tools developed by Standford
+    * The Stanford dependency parser is used
+* [Scikit-Learn](https://scikit-learn.org/stable/) - Machine Learning framework for Python
 
 ## Authors
 
