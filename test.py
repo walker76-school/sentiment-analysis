@@ -1,5 +1,6 @@
 from MyCorpusReader import MyCorpusReader
 from AspectDetector import AspectDetector
+from MyWordNetSimilarity import Word_wup_similarity
 from nltk.corpus import brown
 import nltk
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -100,6 +101,24 @@ for aspect in potentialAspects:
     if not true_aspect:
         print("Removing %s" % aspect)
         potentialAspects.remove(aspect)
+wordSimilarity = dict()
+for w in potentialAspects:
+    wordSimilarity[w] = dict()
+# now try and eliminate bad ones using Wu Palmer similarity
+
+#find the similarity of every potential aspect
+for word1 in potentialAspects:
+    for word2 in potentialAspects:
+        l = Word_wup_similarity(word1, word2)
+        wordSimilarity[word1][word2] = l[0]
+# find the average similarity of each word
+averageSimilarity = dict()
+for word in potentialAspects:
+    averageSimilarity[word] = sum(wordSimilarity[word].values()) / len(potentialAspects)
+for word in potentialAspects:
+    if averageSimilarity[word] < .35:
+        potentialAspects.remove(word)
+        print("Removing %s" % word)
 
 # map sentences to their word tokenization in lowercase
 sentToWords = dict(zip(sents, map(lambda s: [w.lower() for w in word_tokenize(s)], sents)))
