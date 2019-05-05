@@ -7,6 +7,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from collections import defaultdict
 import pickle
 from collections import Counter
+import string
 
 
 class AspectDetector:
@@ -28,8 +29,6 @@ class AspectDetector:
             # train the tfidf model on the training corpus
             self.tf_idf_Model = CorpusReader_TFIDF(trainingCorpus, stemmer=None)
 
-        print(" ... Creating HMMTagger")
-        self.tagger = HmmTagger()
         print("Done creating AspectDetector")
 
     def run(self):
@@ -110,14 +109,19 @@ class AspectDetector:
 
         tokens = [e1.lower() for e1 in word_tokenize(self.reviewCorpus.raw())]
         freq_raw = Counter(tokens)
-        # freq_filtered = Counter()
         for aspect in self.potentialAspects:
             count = freq_raw[aspect]
             if count > 3:
-                # freq_filtered[key] = count
                 self.potentialAspects.remove(aspect)
 
-        # self.potentialAspects.sort(key=lambda e1 : freq[e1], reverse=True)
+        nonAllowed = string.punctuation + "1234567890"
+        for aspect in self.potentialAspects:
+            for token in nonAllowed:
+                if token in aspect:
+                    try:
+                        self.potentialAspects.remove(aspect)
+                    except ValueError:
+                        pass
 
         return self.potentialAspects
 
