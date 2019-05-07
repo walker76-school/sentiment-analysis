@@ -2,7 +2,6 @@
 import nltk
 from nltk.collocations import *
 from CorpusReader_TFIDF import CorpusReader_TFIDF
-from HMMTagger import HmmTagger
 from nltk.tokenize import sent_tokenize, word_tokenize
 from collections import defaultdict
 import pickle

@@ -1,16 +1,11 @@
-from collections import defaultdict, Counter
-import nltk
+from collections import defaultdict
 from nltk.corpus import brown
-from nltk.corpus import wordnet as wn
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.parse.corenlp import CoreNLPDependencyParser
 from MyCorpusReader import MyCorpusReader
 from AspectDetector import AspectDetector
-from MyWordNetSimilarity import wup_similarity, lch_similarity
+from MyWordNetSimilarity import wup_similarity
 from SentimentAnalyzer import SentimentAnalyzer
-from MyViterbi import MyViterbi
-import gensim
-from gensim.models import Word2Vec
 
 POSITIVE_KEY = "POSITIVE"
 NEGATIVE_KEY = "NEGATIVE"
@@ -19,7 +14,6 @@ NEUTRAL_KEY = "NEUTRAL"
 corpus = MyCorpusReader("reviews")
 a = AspectDetector(brown, corpus)
 sentimentAnalyzer = SentimentAnalyzer()
-viterbi = MyViterbi()
 parser = CoreNLPDependencyParser(url='http://localhost:9000')
 
 raw = corpus.raw()
@@ -217,11 +211,14 @@ for aspect in potentialAspects:
                     res = sentimentAnalyzer.analyze(sent)
                     print("%s - %s" % (aspect, sent))
                     # positive sentiment
-                    if res[0] == 1:
+                    if len(res) > 1:
+                        sentiment_dict[NEUTRAL_KEY] += 1
+                    elif res[0] == 1:
                         sentiment_dict[POSITIVE_KEY] += 1
                     # negative sentiment
-                    else:
+                    elif res[0] == 0:
                         sentiment_dict[NEGATIVE_KEY] += 1
+
                     # this sentence is done being considered for this aspect once a match is found
                     break
 
