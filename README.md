@@ -52,7 +52,7 @@ Navigate to [CoreNLP's download page](https://stanfordnlp.github.io/CoreNLP/down
 
 In terminal before hosting the models, change directory to the CoreNLP folder
 ```
-> cd /<path-to-cornlp>/
+> cd /<path-to-corenlp>/
 ```
 
 To host the models use the following command
@@ -63,7 +63,7 @@ To host the models use the following command
 
 The models will need to be hosted or the project will not be able to run
 
-### Caching data
+### Caching Data
 
 If you want to cache data to make subsequent runs on the same data faster then create a data folder in the root directory of this project
 
