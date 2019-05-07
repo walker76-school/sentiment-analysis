@@ -133,10 +133,6 @@ for aspect in potentialAspects:
     # Test every sentence
     for sent in sents:
 
-        # If the word isn't in the sentence then don't consider it
-        if aspect not in sent:
-            continue
-
         # Consider each chunk of the sentence individually
         if ", " in sent:
             sent_tokens = sent.split(", ")
@@ -145,25 +141,49 @@ for aspect in potentialAspects:
 
         for sent_token in sent_tokens:
 
+            tokens = [e1.lower() for e1 in word_tokenize(sent_token)]
+
+            inSentToken = False
+            for token in tokens:
+                if aspect == token:
+                    inSentToken = True
+
             # If the word isn't in the sentence chunk then don't consider it
-            if aspect not in sent_token:
+            if not inSentToken:
                 continue
 
             # Tokenize and then retrieve the first parse tree
-            tokens = [e1.lower() for e1 in word_tokenize(sent_token)]
-            parse_triples = []
-            try:
-                parse = next(parser.parse(tokens))
+            parses = parser.parse(tokens)
+            for parse in parses:
                 parse_triples = [(governor, dep, dependent) for governor, dep, dependent in parse.triples()]
-            except ValueError:
-                print("No tree for - %s" % sent)
 
-            # Check to see if it's the subject at least once
-            for trip in parse_triples:
-                if trip[1] == "nsubj":
-                    subj = trip[2][0]
-                    if subj == aspect:
-                        true_aspect = True
+                # Check to see if it's the subject at least once
+                for trip in parse_triples:
+                    if trip[1] == "nsubj":
+                        subj = trip[2][0]
+                        pos = trip[2][1]
+                        if subj == aspect and "NN" in pos:
+                            true_aspect = True
+                            break
+                    '''
+                    elif trip[1] == "compound":
+                        subj = trip[2][0]
+                        pos = trip[2][1]
+                        if subj == aspect and "NN" in pos:
+                            true_aspect = True
+                            break
+                    elif trip[1] == "conj":
+                        subjA = trip[0][0]
+                        subjB = trip[2][0]
+                        posA = trip[0][1]
+                        posB = trip[2][1]
+                        if (subjA == aspect and "NN" in posA) or (subjB == aspect and "NN" in posB):
+                            true_aspect = True
+                            break
+                    '''
+
+                if true_aspect:
+                    break
 
     # If it's not ever the subject then remove it
     if not true_aspect:
