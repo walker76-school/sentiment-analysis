@@ -20,7 +20,7 @@ class AspectDetector:
         self.potentialAspects = None
 
         try:
-            with open('data/potentialAspects.pickle', 'rb') as handle:
+            with open('data/potentialAspects.dat', 'rb') as handle:
                 self.potentialAspects = pickle.load(handle)
         except FileNotFoundError:
 
@@ -71,7 +71,7 @@ class AspectDetector:
                 if(bigram_1 in self.potentialAspects and bigram_2 in self.potentialAspects):
                     self.potentialAspects.remove(bigram_2)
 
-            with open('data/potentialAspects.pickle', 'wb') as handle:
+            with open('data/potentialAspects.dat', 'wb') as handle:
                 pickle.dump(self.potentialAspects, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         tagged_sents = []

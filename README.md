@@ -6,9 +6,9 @@ This library is built using Python and the NLTK library to detect aspects and se
 
 These instructions will get a copy of the project up and running on your local machine
 
-### Prerequisites
+### NLTK Prerequisites
 
-Before installing this library you'll want to make sure you have NLTK downloaded
+Before installing this project you'll want to make sure you have NLTK downloaded
 
 ```
 > pip install nltk
@@ -25,24 +25,37 @@ Once the Python terminal is open use the following commands to open the NLTK dow
 >> nltk.download()
 ```
 
-Once the download window pops up, install the following corpra -
+Once the downloader window pops up, install the following corpra -
 
+* averaged_perceptron_tagger - Averaged Perceptron Tagger
 * brown - Brown Corpus
 * punkt - Punkt Tokenizer Models
 * stopwords - Stopwords Corpus
 * treebank - Penn Treebank Sample
 * universal_tagset - Mappings to the Universal Part-of-Speech Tagset
+* wordnet - WordNet
+* words - Word List
 
-Next you will have to install the CoreNLP models for using the CoreNLP Dependency Parser
+### Additional Prerequisites
 
-Navigate to [CoreNLP's download page](https://stanfordnlp.github.io/CoreNLP/download.html) or use the direct [link](https://nlp.stanford.edu/software/stanford-parser-full-2018-10-17.zip) to download the required models and unzip them to a convinent location.
-
-In terminal change directory to the CoreNLP folder. For my local computer the command is.
+You will need the SciPy and scikit-learn libraries
 ```
-> cd ~/stanford-corenlp-full-2018-10-05
+> pip install scipy
+> pip install sklearn
 ```
 
-To host the models locally use the following command:
+### CoreNLP
+
+Next you will have to install CoreNLP for using the CoreNLP Dependency Parser
+
+Navigate to [CoreNLP's download page](https://stanfordnlp.github.io/CoreNLP/download.html) or use the direct [link](https://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip) to download the required models and unzip them to a convenient location.
+
+In terminal before hosting the models, change directory to the CoreNLP folder
+```
+> cd /<path-to-cornlp>/
+```
+
+To host the models use the following command
 
 ```
 > java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -preload tokenize,ssplit,pos,lemma,ner,parse,depparse -status_port 9000 -port 9000 -timeout 15000 & 
@@ -50,18 +63,29 @@ To host the models locally use the following command:
 
 The models will need to be hosted or the project will not be able to run
 
-In the the folder where this readMe is located create a folder in this project called data for caching purposes. 
-The reason that this folder is not automatically present is because git does not store empty folders. The files
-that will be generated into the data folder are large.
+### Caching data
+
+If you want to cache data to make subsequent runs on the same data faster then create a data folder in the root directory of this project
+
 ```
+> cd /<path-to-project>/
 > mkdir data
 ```
+
+The files that will be generated into the data folder are the following
+
+* model.dat - Stores the LinearSVC model used in sentiment analysis
+* potentialAspects.dat - Stores the initial potential aspects from the AspectDetector
+* vectorizer.dat - Stores the CountVectorizer used in sentiment analysis
+
+These files will be quite large ( > 10mb )
+
 ## Built With
 
-* [NLTK](https://www.nltk.org/) - Python library for Natural Language Processing
+* [NLTK](https://www.nltk.org/) - Library for Natural Language Processing
 * [Standford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) - NLP tools developed by Standford
-    * The Stanford dependency parser is used
 * [Scikit-Learn](https://scikit-learn.org/stable/) - Machine Learning framework for Python
+* [SciPy](https://www.scipy.org/) - Library used for scientific and technical computing
 
 ## Authors
 
