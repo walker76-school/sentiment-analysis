@@ -8,6 +8,7 @@
 import nltk
 from nltk.corpus import treebank
 from nltk.parse import ViterbiParser
+from collections import defaultdict
 
 
 class MyViterbi:
@@ -17,6 +18,11 @@ class MyViterbi:
     # param: void
     # return: void
     def __init__(self):
+        self.wordToTags = defaultdict(set)
+        convertedTaggedWords = [(w,nltk.tag.mapping.map_tag('en-ptb', 'universal', t)) for w,t in treebank.tagged_words()]
+        for word, tag in convertedTaggedWords:
+            self.wordToTags[word].add(tag)
+
         productions = list()
         S = nltk.Nonterminal('S')
         for tree in treebank.parsed_sents():
@@ -26,82 +32,84 @@ class MyViterbi:
         # print(pcfg)
         self.viterb = ViterbiParser(pcfg)
         self.mostRecentTree = None
-        self.validTags = set()
+        self.validPosTags = set()
+        self.validChunkTags = set()
+        self.validIOBTags = set()
+        self.relationTags = set()
+        self.anchorTags = set()
 
         # pos tags
-        self.validTags.add("CC")
-        self.validTags.add("CD")
-        self.validTags.add("DT")
-        self.validTags.add("EX")
-        self.validTags.add("FW")
-        self.validTags.add("IN")
-        self.validTags.add("JJ")
-        self.validTags.add("JJR")
-        self.validTags.add("JJS")
-        self.validTags.add("LS")
-        self.validTags.add("MD")
-        self.validTags.add("NN")
-        self.validTags.add("NNS")
-        self.validTags.add("NNP")
-        self.validTags.add("NNPS")
-        self.validTags.add("PDT")
-        self.validTags.add("POS")
-        self.validTags.add("PRP")
-        self.validTags.add("PRP$")
-        self.validTags.add("PR")
-        self.validTags.add("PBR")
-        self.validTags.add("PBS")
-        self.validTags.add("RP")
-        self.validTags.add("SYM")
-        self.validTags.add("TO")
-        self.validTags.add("UH")
-        self.validTags.add("VB")
-        self.validTags.add("VBZ")
-        self.validTags.add("VBP")
-        self.validTags.add("VBD")
-        self.validTags.add("VBG")
-        self.validTags.add("WDT")
-        self.validTags.add("WP")
-        self.validTags.add("WP$")
-        self.validTags.add("WRB")
-        self.validTags.add(".")
-        self.validTags.add(",")
-        self.validTags.add(":")
-        self.validTags.add("(")
-        self.validTags.add(")")
+        self.validPosTags.add("CC")
+        self.validPosTags.add("CD")
+        self.validPosTags.add("DT")
+        self.validPosTags.add("EX")
+        self.validPosTags.add("FW")
+        self.validPosTags.add("IN")
+        self.validPosTags.add("JJ")
+        self.validPosTags.add("JJR")
+        self.validPosTags.add("JJS")
+        self.validPosTags.add("LS")
+        self.validPosTags.add("MD")
+        self.validPosTags.add("NN")
+        self.validPosTags.add("NNS")
+        self.validPosTags.add("NNP")
+        self.validPosTags.add("NNPS")
+        self.validPosTags.add("PDT")
+        self.validPosTags.add("POS")
+        self.validPosTags.add("PRP")
+        self.validPosTags.add("PRP$")
+        self.validPosTags.add("PR")
+        self.validPosTags.add("PBR")
+        self.validPosTags.add("PBS")
+        self.validPosTags.add("RP")
+        self.validPosTags.add("SYM")
+        self.validPosTags.add("TO")
+        self.validPosTags.add("UH")
+        self.validPosTags.add("VB")
+        self.validPosTags.add("VBZ")
+        self.validPosTags.add("VBP")
+        self.validPosTags.add("VBD")
+        self.validPosTags.add("VBG")
+        self.validPosTags.add("WDT")
+        self.validPosTags.add("WP")
+        self.validPosTags.add("WP$")
+        self.validPosTags.add("WRB")
+        self.validPosTags.add(".")
+        self.validPosTags.add(",")
+        self.validPosTags.add(":")
+        self.validPosTags.add("(")
+        self.validPosTags.add(")")
 
         # chunk tags
-        self.validTags.add("NP")
-        self.validTags.add("PP")
-        self.validTags.add("VP")
-        self.validTags.add("ADVP")
-        self.validTags.add("ADJP")
-        self.validTags.add("SBAR")
-        self.validTags.add("PRT")
-        self.validTags.add("INTJ")
+        self.validChunkTags.add("NP")
+        self.validChunkTags.add("PP")
+        self.validChunkTags.add("VP")
+        self.validChunkTags.add("ADVP")
+        self.validChunkTags.add("ADJP")
+        self.validChunkTags.add("SBAR")
+        self.validChunkTags.add("PRT")
+        self.validChunkTags.add("INTJ")
+        self.validChunkTags.add("PNP")
 
         # IOB tags
-        self.validTags.add("I-")
-        self.validTags.add("O-")
-        self.validTags.add("B-")
-
-        # prepositional noun phrase
-        self.validTags.add("PNP")
+        self.validIOBTags.add("I-")
+        self.validIOBTags.add("O-")
+        self.validIOBTags.add("B-")
 
         # relation tags
-        self.validTags.add("-SBJ")
-        self.validTags.add("-OBJ")
-        self.validTags.add("-PRD")
-        self.validTags.add("-TMP")
-        self.validTags.add("-CLR")
-        self.validTags.add("-LOC")
-        self.validTags.add("-DIR")
-        self.validTags.add("-EXT")
-        self.validTags.add("-PRP")
+        self.relationTags.add("SBJ")
+        self.relationTags.add("OBJ")
+        self.relationTags.add("PRD")
+        self.relationTags.add("TMP")
+        self.relationTags.add("CLR")
+        self.relationTags.add("LOC")
+        self.relationTags.add("DIR")
+        self.relationTags.add("EXT")
+        self.relationTags.add("PRP")
 
         # anchor tags
-        self.validTags.add("A1")
-        self.validTags.add("P1")
+        self.anchorTags.add("A1")
+        self.anchorTags.add("P1")
 
 
     # parse
@@ -130,9 +138,24 @@ class MyViterbi:
         # see if a previous tree exists
         if self.mostRecentTree is None:
             raise RuntimeError("No previous tree exists")
-        if x not in self.validTags:
-            raise RuntimeError("Invalid label")
+        # see if it is a POS tag
+        if x not in self.validPosTags:
+            # if not see if it is a chunk tag
+            stringParts = x.split("-")
+            if len(stringParts) == 2 and stringParts[1] not in self.relationTags:
+                raise RuntimeError("Invalid relation label")
+            if stringParts[0] not in self.validChunkTags:
+                raise RuntimeError("Invalid tag")
         return [subtree for subtree in self.mostRecentTree.subtrees(lambda t: t.label() == x)]
+
+    def lastparse_phrase(self, x):
+        # find all subtrees of a certain type
+        # see if a previous tree exists
+        if self.mostRecentTree is None:
+            raise RuntimeError("No previous tree exists")
+        if x not in self.validChunkTags:
+            raise RuntimeError("not a valid type of chunk")
+        return [subtree for subtree in self.mostRecentTree.subtrees(lambda t: x in t.label())]
 
     # lastparse_height
     # returns the height of the tree that was just generated
@@ -146,8 +169,8 @@ class MyViterbi:
 
     # wordsFromChunks
     # helper function for taking the trees given and turning them into a lists of words
-    def wordsFromChunks(self, label):
-        chunks = self.lastparse_label(label)
+    def wordsFromChunks(self, label, alternateMode = False):
+        chunks = self.lastparse_phrase(label) if alternateMode else self.lastparse_label(label)
         returnList = list()
         for chunk in chunks:
             temp = chunk.pos()
@@ -159,14 +182,14 @@ class MyViterbi:
     # return:
     #   all noun phrases
     def lastparse_nounphrase(self):
-        return self.wordsFromChunks("NP")
+        return self.wordsFromChunks("NP", True)
 
     # lastparse_verbphrase
     # returns all verb phrases of the most recently generated tree
     # return:
     #   all verb phrases
     def lastparse_verbphrase(self):
-        return self.wordsFromChunks("VP")
+        return self.wordsFromChunks("VP", True)
 
     # lastparse_verbs
     # returns all verbs of the most recently generated tree
@@ -195,3 +218,33 @@ class MyViterbi:
                 result.append(tmp[j])
 
         return result
+
+    def parse_with_substitution(self,x):
+        tokenizedSent = nltk.word_tokenize(x)
+        posTags = nltk.pos_tag(tokenizedSent, tagset='universal')
+        fixedSentence = list()
+        for word, tag in posTags:
+            if tag in self.wordToTags[word]:
+                fixedSentence.append(word)
+            else:
+                for word, tags in self.wordToTags.items():
+                    if tag in tags:
+                        fixedSentence.append(word)
+                        break
+
+        print(fixedSentence)
+
+        trees = self.viterb.parse_all(fixedSentence)
+        # save the first one and then return it
+        self.mostRecentTree = trees[0]
+        return self.mostRecentTree
+
+"""
+v = MyViterbi()
+try:
+    v.parse("The board of directors is eating a cupcake")
+except Exception:
+    print("bad")
+v.parse_with_substitution("The board of directors is eating a cupcake")
+"""
+
