@@ -18,12 +18,19 @@ class AspectDetector:
         self.trainingCorpus = trainingCorpus
         self.reviewCorpus = reviewCorpus
         self.potentialAspects = None
+        self.reviewWords = None
 
         try:
             with open('data/potentialAspects.dat', 'rb') as handle:
                 self.potentialAspects = pickle.load(handle)
+            with open('data/wordsFromReviewCorpus.dat', 'rb') as handle2:
+                self.reviewWords = set(pickle.load(handle2))
+            if self.reviewWords != set(self.reviewCorpus.words()):
+                self.reviewWords = None
         except FileNotFoundError:
+            self.potentialAspects = None
 
+        if self.potentialAspects is None or self.reviewWords is None:
             print(" ... Creating TF-IDF CorpusReader")
             # train the tfidf model on the training corpus
             self.tf_idf_Model = CorpusReader_TFIDF(trainingCorpus, stemmer=None)
@@ -32,7 +39,9 @@ class AspectDetector:
 
     def run(self):
 
-        if self.potentialAspects is None:
+        # run if the aspects cannot be loaded from a file or if the file is for a different review corpus
+        if self.potentialAspects is None or self.reviewWords is None:
+            self.reviewWords = self.reviewCorpus.words()
             # get all of the tf_idf values for the documents in the review corpus
             vectors = list()
             for file in self.reviewCorpus.fileids():
@@ -73,6 +82,9 @@ class AspectDetector:
 
             with open('data/potentialAspects.dat', 'wb') as handle:
                 pickle.dump(self.potentialAspects, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+            with open('data/wordsFromReviewCorpus.dat', 'wb') as handle2:
+                pickle.dump(self.reviewWords, handle2, protocol=pickle.HIGHEST_PROTOCOL)
 
         tagged_sents = []
         sents = sent_tokenize(self.reviewCorpus.raw())
