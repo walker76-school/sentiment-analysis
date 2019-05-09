@@ -159,7 +159,6 @@ for aspect in potentialAspects:
                         if subj == aspect and "NN" in pos:
                             true_aspect = True
                             break
-                    '''
                     elif trip[1] == "compound":
                         subj = trip[2][0]
                         pos = trip[2][1]
@@ -171,10 +170,15 @@ for aspect in potentialAspects:
                         subjB = trip[2][0]
                         posA = trip[0][1]
                         posB = trip[2][1]
-                        if (subjA == aspect and "NN" in posA) or (subjB == aspect and "NN" in posB):
+                        if (subjA == aspect and "NN" == posA) or (subjB == aspect and "NN" == posB):
                             true_aspect = True
                             break
-                    '''
+                    elif trip[1] == "dobj":
+                        subj = trip[2][0]
+                        pos = trip[2][1]
+                        if subj == aspect and "NN" == pos:
+                            true_aspect = True
+                            break
 
                 if true_aspect:
                     break
