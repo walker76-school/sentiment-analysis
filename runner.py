@@ -233,6 +233,7 @@ handle = open("out.txt", "w")
 for aspect in potentialAspects:
     print("%-10s %d %d %d" % (aspect, aspect_dict[aspect][POSITIVE_KEY], aspect_dict[aspect][NEUTRAL_KEY], aspect_dict[aspect][NEGATIVE_KEY]))
     handle.write("%s,%d,%d,%d\n" % (aspect, aspect_dict[aspect][POSITIVE_KEY], aspect_dict[aspect][NEUTRAL_KEY], aspect_dict[aspect][NEGATIVE_KEY]))
+handle.close()
 
 
 
