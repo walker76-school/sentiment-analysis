@@ -11,7 +11,8 @@ POSITIVE_KEY = "POSITIVE"
 NEGATIVE_KEY = "NEGATIVE"
 NEUTRAL_KEY = "NEUTRAL"
 
-corpus = MyCorpusReader("_samplereview3")
+corpus = MyCorpusReader("reviews")
+# corpus = MyCorpusReader("_samplereview3")
 a = AspectDetector(brown, corpus)
 sentimentAnalyzer = SentimentAnalyzer()
 parser = CoreNLPDependencyParser(url='http://localhost:9000')
@@ -228,8 +229,10 @@ for aspect in potentialAspects:
 
     aspect_dict[aspect] = sentiment_dict
 
+handle = open("out.txt", "w")
 for aspect in potentialAspects:
     print("%-10s %d %d %d" % (aspect, aspect_dict[aspect][POSITIVE_KEY], aspect_dict[aspect][NEUTRAL_KEY], aspect_dict[aspect][NEGATIVE_KEY]))
+    handle.write("%s,%d,%d,%d\n" % (aspect, aspect_dict[aspect][POSITIVE_KEY], aspect_dict[aspect][NEUTRAL_KEY], aspect_dict[aspect][NEGATIVE_KEY]))
 
 
 

@@ -1,28 +1,23 @@
-steps      24 0 13
-monitor    9 0 3
-phone      10 0 4
-count      9 0 5
-battery    7 0 1
-device     5 0 4
-track      5 0 3
-mode       1 0 0
-charge     7 0 4
-rate       8 0 3
-text       4 0 1
-screen     5 0 1
-sensor     1 0 1
-counter    2 0 2
-bands      2 0 1
-strap      1 0 1
-activity   4 0 1
-option     1 0 1
-cable      1 0 0
-plug       1 0 1
-review     2 0 1
-alarm      2 0 0
-design     2 0 1
-fraction   0 0 2
-customer   2 0 0
-replacement 0 0 1
-port       1 0 1
-item       0 0 2
+keyboard,2,0,1
+buttons,3,0,0
+battery,1,0,2
+keys,1,0,1
+connected,0,0,2
+calls,0,0,1
+phones,1,0,0
+setup,1,0,0
+heel,1,0,0
+favorites,1,0,0
+suits,1,0,0
+recommend,0,0,1
+purchase,1,0,0
+reception,1,0,0
+morning,1,0,1
+screen,1,0,0
+signal,1,0,0
+ring,1,0,0
+call,2,0,0
+pain,0,0,1
+price,1,0,0
+features,1,0,0
+quickly,0,0,1
