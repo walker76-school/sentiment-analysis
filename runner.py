@@ -158,7 +158,7 @@ for aspect in potentialAspects:
             for word in tokens:
                 if word == aspect:
                     res = sentimentAnalyzer.analyze(sent)
-                    print("%s - %s" % (aspect, sent))
+                    # print("%s - %s" % (aspect, sent))
                     # positive sentiment
                     if len(res) > 1:
                         sentiment_dict[NEUTRAL_KEY] += 1
