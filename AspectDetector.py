@@ -1,4 +1,10 @@
-# laird
+# author: Andrew Walker, Ian Laird
+# file name: AspectDetector.py
+# class: NLP
+# instructor: Dr Lin
+# due date: May 10, 2019
+# date last modified: May 10, 2019
+
 import nltk
 from nltk.collocations import *
 from CorpusReader_TFIDF import CorpusReader_TFIDF
@@ -13,6 +19,13 @@ class AspectDetector:
     TF_IDF_ASPECT_PERCENT = .01
     NUMBER_OF_TWO_GRAMS_TO_CONSIDER = 10
 
+    # constructor
+    #
+    # param:
+    #   trainingCorpus: the corpus to train TF-DF on
+    #   reviewCorpus: the corpus containing the reviews to analyze
+    #
+    # This method creates and initializes the AspectDetector
     def __init__(self, trainingCorpus, reviewCorpus):
         print("Creating AspectDetector ... ")
         self.trainingCorpus = trainingCorpus
@@ -37,6 +50,11 @@ class AspectDetector:
 
         print("Done creating AspectDetector")
 
+    # run
+    #
+    # param: none
+    #
+    # This method find the potential aspects from the reviewCorpus
     def run(self):
 
         # run if the aspects cannot be loaded from a file or if the file is for a different review corpus

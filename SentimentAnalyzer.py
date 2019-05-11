@@ -1,9 +1,23 @@
+# author: Andrew Walker, Ian Laird
+# file name: SentimentAnalyzer.py
+# class: NLP
+# instructor: Dr Lin
+# due date: May 10, 2019
+# date last modified: May 10, 2019
+
 import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.svm import LinearSVC
 import pickle
 
+
 class SentimentAnalyzer:
+
+    # constructor
+    #
+    # param: none
+    #
+    # This method creates the SentimentAnalyzer
     def __init__(self):
         print("Creating SentimentAnalyzer ...")
 
@@ -58,6 +72,12 @@ class SentimentAnalyzer:
 
         print("Done creating SentimentAnalyzer")
 
+    # preprocess
+    #
+    # param:
+    #   reviews: a list of sentences from a review
+    #
+    # This method cleans the text of a review
     def preprocess(self, reviews):
         REPLACE_NO_SPACE = re.compile("(\.)|(\;)|(\:)|(\!)|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
         REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
@@ -69,15 +89,36 @@ class SentimentAnalyzer:
 
         return reviews
 
+    # training_data
+    #
+    # param: none
+    #
+    # This method returns the training data
     def training_data(self):
         return self.train_clean
 
+    # testing_data
+    #
+    # param: none
+    #
+    # This method returns the testing data
     def testing_data(self):
         return self.test_clean
 
+    # model
+    #
+    # param: none
+    #
+    # This method returns the LinearSVC model
     def model(self):
         return self.model
 
+    # analyze
+    #
+    # param:
+    #   sentence: the sentence to be analyzed
+    #
+    # This method returns the sentiment of a sentence
     def analyze(self, sentence):
         transform = self.vectorizer.transform(self.preprocess([sentence]))
         return self.svc_model.predict(transform)

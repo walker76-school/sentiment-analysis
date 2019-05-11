@@ -1,3 +1,10 @@
+# author: Andrew Walker, Ian Laird
+# file name: runner.py
+# class: NLP
+# instructor: Dr Lin
+# due date: May 10, 2019
+# date last modified: May 10, 2019
+
 from collections import defaultdict
 from nltk.corpus import brown
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -27,69 +34,6 @@ potentialAspects = a.run()
 ndx = int(0.2 * len(potentialAspects))
 potentialAspects = potentialAspects[:ndx]
 
-'''
-sim_dict = {}
-
-for outer_aspect in potentialAspects:
-    for inner_aspect in potentialAspects:
-        if outer_aspect == inner_aspect:
-            continue
-
-        print("%s - %s" % (outer_aspect, inner_aspect))
-
-        outer_synsets = wn.synsets(outer_aspect)
-        inner_synsets = wn.synsets(inner_aspect)
-
-        count = 0
-        total = 0.0
-        for outer_synset in outer_synsets:
-            for inner_synset in inner_synsets:
-                sim = wn.wup_similarity(outer_synset, inner_synset)
-                if sim is not None:
-                    count += 1
-                    total += sim
-
-        try:
-            avg = total / count
-            sim_dict[(outer_aspect, inner_aspect)] = avg
-        except ZeroDivisionError:
-            pass
-
-print("Creating Word2Vec model")
-model = gensim.models.Word2Vec([potentialAspects], min_count=1, size=5, window=2)
-print("Done with Word2Vec model")
-
-for aspect in potentialAspects:
-    try:
-        print("%s most similar to %s" % (aspect, model.most_similar(aspect)))
-    except KeyError:
-        pass
-
-model_wordSimilarity = dict()
-for w in potentialAspects:
-    model_wordSimilarity[w] = dict()
-# now try and eliminate bad ones using Wu Palmer similarity
-
-# find the similarity of every potential aspect
-for word1 in potentialAspects:
-    for word2 in potentialAspects:
-        if word1 == word2:
-            continue
-        try:
-            l = model.wv.similarity(word1, word2)
-            model_wordSimilarity[word1][word2] = l
-        except KeyError:
-            pass
-# find the average similarity of each word
-model_averageSimilarity = dict()
-for word in potentialAspects:
-    model_averageSimilarity[word] = sum(model_wordSimilarity[word].values()) / len(potentialAspects)
-for word in potentialAspects:
-    if model_averageSimilarity[word] < .35:
-        potentialAspects.remove(word)
-        print("Model - Removing %s with average similarity of %f" % (word, model_averageSimilarity[word]))
-'''
-
 # Setup variables for calculating average similarity
 wordSimilarity = dict()
 for w in potentialAspects:
@@ -118,7 +62,7 @@ for word in potentialAspects:
 for word in potentialAspects:
     if averageSimilarity[word] < .35:
         potentialAspects.remove(word)
-        print("Removing %s with average similarity of %f" % (word, averageSimilarity[word]))
+        # print("Removing %s with average similarity of %f" % (word, averageSimilarity[word]))
 
 # Check to remove any potential aspects that aren't subjects of the sentence
 for aspect in potentialAspects:
@@ -186,7 +130,7 @@ for aspect in potentialAspects:
 
     # If it's not ever the subject then remove it
     if not true_aspect:
-        print("Removing %s" % aspect)
+        # print("Removing %s" % aspect)
         potentialAspects.remove(aspect)
 
 # Map sentences to their word tokenization in lowercase
